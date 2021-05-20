@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Components/SphereComponent.h"
 #include "Monster.generated.h"
+class AAMeleeWeapon;
 
 UCLASS()
 class GOLDENEGG_API AMonster : public ACharacter
@@ -53,6 +54,8 @@ public:
 	//공격범위
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MonsterProperties)
 		USphereComponent* AttackRangeSphere;
+
+
 	//거리측정 함수.  인라인 사용 짧은 함수이므로 더 빨리 실행 가능!
 	inline bool isInSightRange(float d) {
 		return d < SightSphere->GetScaledSphereRadius();
@@ -64,12 +67,25 @@ public:
 	//무기 장착관련 코드
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
 		UClass* BPMeleeWeapon;
+	
 
 	AAMeleeWeapon* MeleeWeapon;
 	
-	
-
-	//class AAMeleeWeapon;  //?
 	virtual void PostInitializeComponents() override;
+
+	//캐릭터 애니메이션 공격모드와 연동하기 위한 코드
+	UFUNCTION(BlueprintCallable, Category = Collision)
+		bool isInAttackRangeOfPlayer();
+
+	//검을 휘두르는 코드
+	UFUNCTION(BlueprintCallable, Category = Collision)
+		void SwordSwung();
+
+	//총알bullet 상속 접근 용
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
+		UClass* BPBullet;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
+		float BulletLaunchImpulse;
+	void Attack(AActor* thing);
 
 };

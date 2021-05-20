@@ -3,6 +3,8 @@
 
 #include "Monster.h"
 #include "Avatar.h"
+#include"AMeleeWeapon.h"
+#include "Bullet.h"
 #include "Kismet/GameplayStatics.h"  //Ugameplaystatics 헤더
 #include "Engine/SkeletalMeshSocket.h"
 
@@ -41,6 +43,7 @@ void AMonster::Tick(float DeltaTime)
 	//몬스터 움직이기 시작
 	AAvatar* avatar = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (!avatar) return;
+	FVector playerPos = avatar->GetActorLocation();
 	FVector toPlayer = avatar->GetActorLocation() - GetActorLocation();
 	float distanceToPlayer = toPlayer.Size();
 	//시야안에 플레이어가 없다면 돌아가기
@@ -57,6 +60,21 @@ void AMonster::Tick(float DeltaTime)
 	RootComponent->SetWorldRotation(toPlayerRotation);
 	//몬스터 움직이기 끝
 
+
+	//몬스터가 플레이어 공격
+	if (isInAttackRange(distanceToPlayer)) {
+		if (!TimeSinceLastStrike) {
+			Attack(avatar);
+		}
+		TimeSinceLastStrike += DeltaTime;  //계속공격만하는건 못하도록 시간 설정. 공격속도 
+		if (TimeSinceLastStrike > AttackTimeout) {
+			TimeSinceLastStrike = 0;
+		}
+		return;
+	}
+	else {
+		AddMovementInput(toPlayer, Speed * DeltaTime);
+	}
 }
 
 // Called to bind functionality to input
@@ -78,3 +96,42 @@ void AMonster::PostInitializeComponents() {
 	}
 }
 
+bool AMonster::isInAttackRangeOfPlayer() {
+	AAvatar* avater = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	if (!avater) return false;
+
+	FVector playerPos = avater->GetActorLocation();
+	FVector toPlayer = playerPos - GetActorLocation();
+	float distanceToPlayer = toPlayer.Size();
+
+	return distanceToPlayer < AttackRangeSphere->GetScaledSphereRadius(); //공격범위안에 없으면 false반환!
+}
+
+void AMonster::SwordSwung() {
+	if (MeleeWeapon) {
+		MeleeWeapon->Swing();
+	}
+}
+
+void AMonster::Attack(AActor* thing) {
+	if (MeleeWeapon) {
+		MeleeWeapon->Swing();
+	}
+	else if (BPBullet) {
+		FVector fwd = GetActorForwardVector();
+		FVector nozzle = GetMesh()->GetBoneLocation("RightHand");
+		nozzle += fwd * 155;
+		FVector toOpponent = thing->GetActorLocation() - nozzle;
+		toOpponent.Normalize();
+		ABullet* bullet = GetWorld()->SpawnActor <ABullet>(BPBullet, nozzle, RootComponent->GetComponentRotation());
+
+		if (bullet) {
+			bullet->Firer = this;
+			bullet->ProxSphere->AddImpulse(fwd * BulletLaunchImpulse);
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Yellow, "Monster: No bullet actor could be spawned. is the bullet overlapping something? ");
+		}
+
+	}
+}

@@ -26,9 +26,19 @@ void AAvatar::BeginPlay()
 }
 
 // Called every frame
+float AAvatar::TakeDamage(float Damage, struct
+	FDamageEvent const& DamageEvent, AController*EventInstigator, AActor* DamageCauser) {
+	knockback = GetActorLocation() - DamageCauser->GetActorLocation();
+	knockback.Normalize();
+	knockback *= Damage * 500;
+	return 0;        //에러, 백터형을 플로프형으로 반환할수 없다고 함.
+}
 void AAvatar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	AddMovementInput(knockback, 1.f);
+	knockback *= 0.5f;
+
 
 }
 
@@ -141,7 +151,7 @@ void AAvatar::EatMuffin() {
 	APlayerController* PController = GetWorld()->GetFirstPlayerController();
 	AMyHUD* hud = Cast<AMyHUD>(PController->GetHUD());
 
-	if (Backpack.Find(WTEat)) {  //버그 시작하자 마자 EatMuffine()시전시 게임 팅김 왜?... Backpack에 확인 불가?...
+	if (Backpack.Find(WTEat)) {  //버그 시작하자 마자 EatMuffine()시전시 게임 팅김 왜?... Backpack에 확인 불가?... else문 밖으로 return 값 지정해줘서 해결
 		if (Backpack[WTEat] > 0)
 		{   //먹을것의 잔고가 남아있다면
 			Backpack[WTEat] = Backpack[WTEat] - 1;  //TMap의 value 값은 바로 수정!

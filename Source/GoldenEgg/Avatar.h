@@ -58,8 +58,8 @@ public:
 	TMap<FString, UTexture2D*> Icons;
 	bool inventoryShowing;
 
-	void Pickup(APickUpItem* item);
-	void Getup(ANPC* item);
+	void Pickup(APickUpItem* item); 
+	void Getup(ANPC* item);  //내가 만든 함수
 
 	
 	
@@ -72,5 +72,11 @@ public:
 	
 
 	void MouseClicked();
-	
+
+	//캐릭터가 맞을때 구현에 필요한 코드
+	FVector knockback;
+	virtual float TakeDamage(float Damage, struct
+		FDamageEvent const& DamageEvent, AController*
+		EventInstigator, AActor* DamageCauser) override;
+
 };

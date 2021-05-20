@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "AMeleeWeapon.generated.h"
+class AMonster;
 
 UCLASS()
 class GOLDENEGG_API AAMeleeWeapon : public AActor
@@ -33,6 +34,7 @@ public:
 	//자기자신은 히트하지 않도록, 무기를 들고있어도 든 대상은 피해를 입지 않도록
 
 	AMonster *WeaponHolder;
+	
 
 	//히트 판별을 해줄 콜라이더
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = MeleeWeapon)
