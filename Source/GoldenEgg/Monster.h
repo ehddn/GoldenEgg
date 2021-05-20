@@ -32,18 +32,44 @@ public:
 		float Speed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
 		float HitPoints;
+//경험치
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
 		int32 Experience;
+	//블루프린트 타입으로 아이템을 드랍
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
 		UClass* BPLoot;
+	//공격시 데미지
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
 		float BaseAttackDamage;
+	//공격후 잠깐 쉬기
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
 		float AttackTimeout;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MonsterProperties)
 		float TimeSinceLastStrike;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
+	//시야범위
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MonsterProperties)
 		USphereComponent* SightSphere;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
+	//공격범위
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MonsterProperties)
 		USphereComponent* AttackRangeSphere;
+	//거리측정 함수.  인라인 사용 짧은 함수이므로 더 빨리 실행 가능!
+	inline bool isInSightRange(float d) {
+		return d < SightSphere->GetScaledSphereRadius();
+	}
+	inline bool isInAttackRange(float d) {
+		return d < AttackRangeSphere->GetScaledSphereRadius();
+	}
+
+	//무기 장착관련 코드
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
+		UClass* BPMeleeWeapon;
+
+	AAMeleeWeapon* MeleeWeapon;
+	
+	
+
+	//class AAMeleeWeapon;  //?
+	virtual void PostInitializeComponents() override;
+
 };
