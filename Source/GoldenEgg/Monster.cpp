@@ -120,7 +120,26 @@ void AMonster::SwordSwung() {
 void AMonster::Attack(AActor* thing) {
 	if (MeleeWeapon) {
 		MeleeWeapon->Swing();
+		if (BPBullet) {
+			FVector fwd = GetActorForwardVector();
+			FVector nozzle = GetMesh()->GetBoneLocation("LeftHand");
+			nozzle += fwd * 155;
+			FVector toOpponent = thing->GetActorLocation() - nozzle;
+			toOpponent.Normalize();
+			ABullet* bullet = GetWorld()->SpawnActor <ABullet>(BPBullet, nozzle, RootComponent->GetComponentRotation());
+
+			if (bullet) {
+				bullet->Firer = this;
+				GEngine->AddOnScreenDebugMessage(0, 5, FColor::Red, "Fire!");
+				//bullet->ProxSphere->AddImpulse(fwd * BulletLaunchImpulse); 그냥 블루프린트 projectilemovement사용함
+			}
+			else {
+				GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Yellow, "Monster: No bullet actor could be spawned. is the bullet overlapping something? ");
+			}
+		}
 	}
+
+	
 	else if (BPBullet) {
 		FVector fwd = GetActorForwardVector();
 		FVector nozzle = GetMesh()->GetBoneLocation("LeftHand");
@@ -131,7 +150,8 @@ void AMonster::Attack(AActor* thing) {
 
 		if (bullet) {
 			bullet->Firer = this;
-			bullet->ProxSphere->AddImpulse(fwd * BulletLaunchImpulse);
+			GEngine->AddOnScreenDebugMessage(0, 5, FColor::Red, "Is it safe here");
+			//bullet->ProxSphere->AddImpulse(fwd * BulletLaunchImpulse);
 		}
 		else {
 			GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Yellow, "Monster: No bullet actor could be spawned. is the bullet overlapping something? ");

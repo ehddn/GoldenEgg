@@ -2,6 +2,8 @@
 
 
 #include "Bullet.h"
+#include "Kismet/GameplayStatics.h"
+#include "Avatar.h"
 
 // Sets default values
 ABullet::ABullet()
@@ -37,6 +39,9 @@ void ABullet::Tick(float DeltaTime)
 
 void ABullet::Prox_Implementation(class UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+	AAvatar* avatar = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	
+	GEngine->AddOnScreenDebugMessage(0, 5, FColor::Red, "Bullet hit");
 	if (OtherActor == Firer) {
 		return;     //총알이 쏜 사람은 때리지 못하도록
 	}
@@ -44,7 +49,10 @@ void ABullet::Prox_Implementation(class UPrimitiveComponent* OverlappedComp, AAc
 	if (OtherComp != OtherActor->GetRootComponent()) {
 		return;
 	}
-
 	OtherActor->TakeDamage(Damage, FDamageEvent(), NULL, this);
+
 	Destroy();
+	
+	
+	
 }
