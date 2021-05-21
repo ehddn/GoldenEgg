@@ -73,6 +73,8 @@ public:
 
 	void MouseClicked();
 
+	
+
 	//캐릭터가 맞을때 구현에 필요한 코드
 	FVector knockback;
 	virtual float TakeDamage(float Damage, struct

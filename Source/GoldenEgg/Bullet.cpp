@@ -9,7 +9,7 @@ ABullet::ABullet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;  //Æ½ ÇÊ¿ä¾øÀ½!
 
-	Damage = 1;
+	Damage = 100;
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	RootComponent = Mesh;
 

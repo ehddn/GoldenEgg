@@ -26,16 +26,20 @@ void AAvatar::BeginPlay()
 }
 
 // Called every frame
-float AAvatar::TakeDamage(float Damage, struct
-	FDamageEvent const& DamageEvent, AController*EventInstigator, AActor* DamageCauser) {
+float AAvatar::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, 
+	AController*EventInstigator, AActor* DamageCauser) {
 	knockback = GetActorLocation() - DamageCauser->GetActorLocation();
 	knockback.Normalize();
 	knockback *= Damage * 500;
-	return 0;        //에러, 백터형을 플로프형으로 반환할수 없다고 함.
+
+	return knockback.Size();      //에러, 백터형을 플로프형으로 반환할수 없다고 함.
 }
 void AAvatar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	
+
 	AddMovementInput(knockback, 1.f);
 	knockback *= 0.5f;
 

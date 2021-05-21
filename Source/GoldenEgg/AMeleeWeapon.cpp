@@ -16,7 +16,7 @@ AAMeleeWeapon::AAMeleeWeapon()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	RootComponent = Mesh;
 	ProxBox = CreateDefaultSubobject<UBoxComponent>(TEXT("ProxBox"));
-	ProxBox->OnComponentBeginOverlap.AddDynamic(this, &AAMeleeWeapon::Prox);
+	//ProxBox->OnComponentBeginOverlap.AddDynamic(this, &AAMeleeWeapon::Prox);  //자꾸에러나서 못하겠다
 	ProxBox->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	//KeepRelative 상대적 움직임 , KeepWorld월드 기준으로 움직임 , SnapToTarget ? 얘는 뭐냐 / 세가지 규칙 있음
 
@@ -35,7 +35,7 @@ void AAMeleeWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
+/*
 void AAMeleeWeapon::Prox_Implementation(class UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	if (OtherComp != OtherActor->GetRootComponent()) {
@@ -43,11 +43,12 @@ void AAMeleeWeapon::Prox_Implementation(class UPrimitiveComponent* OverlappedCom
 	}
 	//검이 swing하지 않을때는 히트하지 않기, 무기사용자에게 히트하지않기, 두번 히트 하지 않기
 	if (Swinging && OtherActor != WeaponHolder && !ThingsHit.Contains(OtherActor)) {
+		GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Yellow, "검이 히트함");
 		OtherActor->TakeDamage(AttackDamage + WeaponHolder->BaseAttackDamage,
 			FDamageEvent(), NULL, this);
 		ThingsHit.Add(OtherActor);
 	}
-}
+}*/  //그냥 블루프린트로 구현함. 
 
 void AAMeleeWeapon::Swing() {
 	ThingsHit.Empty();

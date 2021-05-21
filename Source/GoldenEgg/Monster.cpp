@@ -44,7 +44,7 @@ void AMonster::Tick(float DeltaTime)
 	AAvatar* avatar = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (!avatar) return;
 	FVector playerPos = avatar->GetActorLocation();
-	FVector toPlayer = avatar->GetActorLocation() - GetActorLocation();
+	FVector toPlayer = playerPos - GetActorLocation();
 	float distanceToPlayer = toPlayer.Size();
 	//시야안에 플레이어가 없다면 돌아가기
 	if (distanceToPlayer > SightSphere->GetScaledSphereRadius()) {
@@ -53,7 +53,8 @@ void AMonster::Tick(float DeltaTime)
 	}
 	toPlayer /= distanceToPlayer;  // 벡터 노말라이즈 
 	//toPlayer.Normalize(); // unit vector로 줄이기
-	AddMovementInput(toPlayer, Speed * DeltaTime);
+	//AddMovementInput(toPlayer, Speed * DeltaTime);
+
 	// 타겟을 보고 toPlayer방향으로 유저가 움직이면 따라서 움직이도록 방향을 바꿔야함 
 	FRotator toPlayerRotation = toPlayer.Rotation();
 	toPlayerRotation.Pitch = 0;  //pitch값은 변경 없음! y값이 바뀌면 앞으로 꼬꾸라질거임 
@@ -63,7 +64,10 @@ void AMonster::Tick(float DeltaTime)
 
 	//몬스터가 플레이어 공격
 	if (isInAttackRange(distanceToPlayer)) {
+		//GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Yellow, "No isInAttackRange ");
+
 		if (!TimeSinceLastStrike) {
+
 			Attack(avatar);
 		}
 		TimeSinceLastStrike += DeltaTime;  //계속공격만하는건 못하도록 시간 설정. 공격속도 
@@ -97,10 +101,10 @@ void AMonster::PostInitializeComponents() {
 }
 
 bool AMonster::isInAttackRangeOfPlayer() {
-	AAvatar* avater = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	if (!avater) return false;
+	AAvatar* avatar = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	if (!avatar) return false;
 
-	FVector playerPos = avater->GetActorLocation();
+	FVector playerPos = avatar->GetActorLocation();
 	FVector toPlayer = playerPos - GetActorLocation();
 	float distanceToPlayer = toPlayer.Size();
 
@@ -119,7 +123,7 @@ void AMonster::Attack(AActor* thing) {
 	}
 	else if (BPBullet) {
 		FVector fwd = GetActorForwardVector();
-		FVector nozzle = GetMesh()->GetBoneLocation("RightHand");
+		FVector nozzle = GetMesh()->GetBoneLocation("LeftHand");
 		nozzle += fwd * 155;
 		FVector toOpponent = thing->GetActorLocation() - nozzle;
 		toOpponent.Normalize();
