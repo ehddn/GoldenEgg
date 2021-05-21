@@ -41,6 +41,7 @@ void ABullet::Prox_Implementation(class UPrimitiveComponent* OverlappedComp, AAc
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	AAvatar* avatar = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	
+	avatar->Hp -= 10;
 	GEngine->AddOnScreenDebugMessage(0, 5, FColor::Red, "Bullet hit");
 	if (OtherActor == Firer) {
 		return;     //총알이 쏜 사람은 때리지 못하도록
