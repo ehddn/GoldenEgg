@@ -30,8 +30,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item);
 	FString Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item);
-	FString Muffin="Muffin";
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item);
+	//FString Muffin="Muffin";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item);
 	int32 Quantity;
@@ -49,6 +49,8 @@ public:
 			OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
 	
-	
+	//spell
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item)
+		UClass* Spell;
 	
 };

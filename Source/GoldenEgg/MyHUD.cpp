@@ -181,6 +181,24 @@ void AMyHUD::MouseMoved() {
 }
 
 
+void AMyHUD::MouseRightClicked() {
+	
+
+	FVector2D mouse;
+	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+	PController->GetMousePosition(mouse.X, mouse.Y);
+
+	for (int c = 0; c < widgets.Num(); c++) {
+		if (widgets[c].hit(mouse)) {
+			AAvatar* avatar = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+			if (widgets[c].bpSpell) {
+				avatar->CastSpell(widgets[c].bpSpell);
+			}
+		}
+	}
+}
+
+
 
 
 

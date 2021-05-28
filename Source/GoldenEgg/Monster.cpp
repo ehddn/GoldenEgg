@@ -27,6 +27,8 @@ AMonster::AMonster()
 	AttackRangeSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AttackRangeSphere"));
 	//AttackRangeSphere->AttachTo(RootComponent);
 	AttackRangeSphere->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	
+	
 }
 
 // Called when the game starts or when spawned
@@ -35,11 +37,35 @@ void AMonster::BeginPlay()
 	Super::BeginPlay();
 	
 }
+float AMonster::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
+	HitPoints -= Damage;
+	
+	knockback = GetActorLocation() - DamageCauser->GetActorLocation();
+	knockback.Normalize();
+	knockback *= 500;
+
+	if (HitPoints <= 0)
+	{
+		// 경험치, 나중에 추가하기
+		/*
+		AAvatar* avatar = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		avatar->Experience += Experience;
+		*/
+		Destroy();
+	}
+
+	return Damage;
+}
 // Called every frame
 void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	AddMovementInput(knockback, 1.f);
+	knockback *= 0.5f;
+
 	//몬스터 움직이기 시작
 	AAvatar* avatar = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (!avatar) return;
@@ -159,3 +185,5 @@ void AMonster::Attack(AActor* thing) {
 
 	}
 }
+
+

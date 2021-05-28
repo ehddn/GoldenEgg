@@ -55,6 +55,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MonsterProperties)
 		USphereComponent* AttackRangeSphere;
 
+	
+
 
 	//거리측정 함수.  인라인 사용 짧은 함수이므로 더 빨리 실행 가능!
 	inline bool isInSightRange(float d) {
@@ -87,5 +89,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
 		float BulletLaunchImpulse;
 	void Attack(AActor* thing);
+
+	//개인적으로 추가한것들 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MonsterProperties)
+	FVector knockback;
+
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 
 };

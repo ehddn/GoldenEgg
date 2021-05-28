@@ -3,6 +3,7 @@
 #include "Avatar.h"
 #include "PickUpItem.h"
 #include "MyHUD.h"
+#include "Spell.h"
 
 
 // Sets default values
@@ -18,11 +19,13 @@ void AAvatar::BeginPlay()
 {
 	Super::BeginPlay();
 	MaxHp = 500;
-	Hp = 200;
+	Hp = 400;
+	/*
 	Backpack.Add("Weapon", 1);
 	Icons.Add("Weapon", Weapon_Icon);
 	Backpack.Add(WTEat, 0);
 	Icons.Add(WTEat, Muffin_Icon);
+	*/
 }
 
 // Called every frame
@@ -61,6 +64,8 @@ void AAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	//마우스 클릭 액션 매핑
 	PlayerInputComponent->BindAction("MouseClickedLMB", IE_Pressed, this, &AAvatar::MouseClicked);
+
+	PlayerInputComponent->BindAction("MouseClickedRMB", IE_Pressed, this, &AAvatar::MouseRightClicked);
 }
 void AAvatar::MoveForward(float amount)
 {
@@ -138,9 +143,21 @@ void AAvatar::ToggleInventory() {
 	{
 		FString fs = it->Key + FString::Printf(TEXT(" x %d"), it->Value);
 		UTexture2D* tex = 0;
+		/*
 		if (Icons.Find(it->Key))
 			tex = Icons[it->Key];
+
 		hud->addWidget(Widget(Icon(fs, tex)));
+		*/
+		
+		if (Icons.Find(it->Key))
+		{
+			tex = Icons[it->Key];
+			Widget w(Icon(fs, tex), Classes[it->Key]);
+			w.bpSpell = Spells[it->Key];
+			hud->addWidget(w);
+		}
+
 
 	}
 
@@ -172,6 +189,27 @@ void AAvatar::EatMuffin() {
 	}
 	else {
 		return;
+	}
+}
+
+void AAvatar::CastSpell(UClass* bpSpell) {
+	ASpell* spell = GetWorld()->SpawnActor<ASpell>(bpSpell, FVector(0), FRotator(0));
+
+	if (spell) {
+		spell->SetCaster(this);
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow,
+			FString("can't cast ") + bpSpell->GetName());
+		
+	}
+}
+
+void AAvatar::MouseRightClicked() {
+	if (inventoryShowing) {
+		APlayerController* PController = GetWorld()->GetFirstPlayerController();
+		AMyHUD* hud = Cast<AMyHUD>(PController->GetHUD());
+		hud->MouseRightClicked();
 	}
 }
 

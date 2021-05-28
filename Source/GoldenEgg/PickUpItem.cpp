@@ -75,7 +75,12 @@ void AAvatar::Pickup(APickUpItem* item)
 		Backpack.Add(item->Name, item->Quantity);
 		// record ref to the tex the first time it is picked up 
 		Icons.Add(item->Name, item->Icon);
+
+		Classes.Add(item->Name, item->GetClass());
+		Spells.Add(item->Name, item->Spell);
 	}
+
+	
 }
 
 

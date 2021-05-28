@@ -44,6 +44,8 @@ public:
 		float Hp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerProperties)
 		float MaxHp;
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item)
 		FString WTEat;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item);
@@ -52,6 +54,8 @@ public:
 	UTexture2D* Muffin_Icon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item);
 	UTexture2D* Weapon_Icon;
+	
+	
 	//인벤토리 추가
 	UPROPERTY()
 	TMap<FString, int> Backpack;
@@ -81,4 +85,11 @@ public:
 		FDamageEvent const& DamageEvent, AController*
 		EventInstigator, AActor* DamageCauser) override;
 
+	//spell
+	void CastSpell(UClass* bpSpell);
+
+	void MouseRightClicked();
+
+	TMap<FString, UClass*> Spells;
+	TMap<FString, UClass*> Classes;
 };

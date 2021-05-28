@@ -57,14 +57,21 @@ struct Icon
 	}
 };
 
+
 struct Widget
 {
 	Icon icon;
+	 //스펠 관련 변수 추가
+	UClass* className;
+	UClass* bpSpell;
+
 	FVector2D pos, size;
-	Widget(Icon iicon)
+	Widget(Icon iicon, UClass *iClassName)
 	{
 		icon = iicon;
+		className = iClassName;
 	}
+
 	float left() { return pos.X; }
 	float right() {return pos.X + size.X;}
 	float top() { return pos.Y; }
@@ -105,6 +112,8 @@ public:
 	void MouseClicked();
 	Widget* heldWidget;
 	void MouseMoved();
+
+	void MouseRightClicked();
 };
 
 
