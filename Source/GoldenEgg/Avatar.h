@@ -92,4 +92,16 @@ public:
 
 	TMap<FString, UClass*> Spells;
 	TMap<FString, UClass*> Classes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item)
+		UClass* bp_spell_blizzard;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item)
+		UClass* bp_spell_fire;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item)
+		int spell_blizzard_Count;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Item)
+		int spell_fire_Count;
+
+	void UseSpell();
 };

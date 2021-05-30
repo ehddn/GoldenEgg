@@ -46,8 +46,7 @@ void ASpell::Tick(float DeltaTime)
 		// don't damage the spell caster
 		if (actors[c] != Caster)
 		{
-			// Only apply the damage if the box is overlapping the actors ROOT component.
-			// This way damage doesn't get applied for simply overlapping the SightSphere of a monster
+			
 			AMonster* monster = Cast<AMonster>(actors[c]);
 			if (monster && ProxBox->IsOverlappingComponent(monster->GetCapsuleComponent()))
 			{

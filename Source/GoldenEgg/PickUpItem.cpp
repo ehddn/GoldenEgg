@@ -59,6 +59,14 @@ void APickUpItem::Prox_Implementation(class UPrimitiveComponent* OverlappedComp,
 	hud->addMessage(Message(Icon, FString("Picked up ") + FString::FromInt(Quantity) +
 		FString(" ") + Name, 5.f, FColor::White));
 	// Destroy this item, as it was picked up
+	if (this->Name == "Blizzard") {
+
+		avatar->spell_blizzard_Count += 1;
+	}
+	else if (this->Name == "Fire") {
+		avatar->spell_fire_Count += 1;
+	}
+	
 	Destroy();
 
 }

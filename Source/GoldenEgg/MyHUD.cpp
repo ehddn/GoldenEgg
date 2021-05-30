@@ -192,6 +192,7 @@ void AMyHUD::MouseRightClicked() {
 		if (widgets[c].hit(mouse)) {
 			AAvatar* avatar = Cast<AAvatar>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 			if (widgets[c].bpSpell) {
+					   
 				avatar->CastSpell(widgets[c].bpSpell);
 			}
 		}

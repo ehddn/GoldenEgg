@@ -66,6 +66,9 @@ void AAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("MouseClickedLMB", IE_Pressed, this, &AAvatar::MouseClicked);
 
 	PlayerInputComponent->BindAction("MouseClickedRMB", IE_Pressed, this, &AAvatar::MouseRightClicked);
+
+	//추가
+	PlayerInputComponent->BindAction("UseSpell", IE_Pressed, this, &AAvatar::UseSpell);
 }
 void AAvatar::MoveForward(float amount)
 {
@@ -172,6 +175,7 @@ void AAvatar::EatMuffin() {
 	APlayerController* PController = GetWorld()->GetFirstPlayerController();
 	AMyHUD* hud = Cast<AMyHUD>(PController->GetHUD());
 
+
 	if (Backpack.Find(WTEat)) {  //버그 시작하자 마자 EatMuffine()시전시 게임 팅김 왜?... Backpack에 확인 불가?... else문 밖으로 return 값 지정해줘서 해결
 		if (Backpack[WTEat] > 0)
 		{   //먹을것의 잔고가 남아있다면
@@ -197,6 +201,7 @@ void AAvatar::CastSpell(UClass* bpSpell) {
 
 	if (spell) {
 		spell->SetCaster(this);
+		
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow,
@@ -209,11 +214,52 @@ void AAvatar::MouseRightClicked() {
 	if (inventoryShowing) {
 		APlayerController* PController = GetWorld()->GetFirstPlayerController();
 		AMyHUD* hud = Cast<AMyHUD>(PController->GetHUD());
+		
 		hud->MouseRightClicked();
 	}
 }
 
+void AAvatar::UseSpell() {
+		APlayerController* PController = GetWorld()->GetFirstPlayerController();
+		AMyHUD* hud = Cast<AMyHUD>(PController->GetHUD());
 
+		
+		if (spell_blizzard_Count>0) {
+			ASpell* spell = GetWorld()->SpawnActor<ASpell>(bp_spell_blizzard, FVector(0), FRotator(0));
+
+				
+					GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow,
+						FString("Use magic "));
+
+					spell_blizzard_Count -= 1;
+					spell->SetCaster(this);
+		}
+		
+		else {
+			if (spell_fire_Count > 0) {
+				ASpell* spell = GetWorld()->SpawnActor<ASpell>(bp_spell_fire, FVector(0), FRotator(0));
+
+
+				GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow,
+					FString("Use magic "));
+
+				spell_fire_Count -= 1;
+				spell->SetCaster(this);
+
+			}
+			else {
+				//시전횟수가 없다면,
+				hud->addMessage(Message(Warning, "you dont have any spell", 3.f, FColor::Red));
+			}
+			
+		}
+
+
+			
+		
+		
+
+}
 
 
 
